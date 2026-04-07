@@ -23,7 +23,7 @@ function getFutureDate(endDate) {
 
 export default function GoalDetail() {
   const { id } = useParams();
-  const { goals, makeDeposit, pauseGoal, deleteGoal } = useApp();
+  const { goals, makeDeposit, pauseGoal, deleteGoal, purchaseGoal } = useApp();
   const navigate = useNavigate();
   // deposit state managed separately below with impact preview
 
@@ -41,7 +41,8 @@ export default function GoalDetail() {
   const milestones = getMilestones(progress);
   const nextMilestone = getNextMilestone(progress);
   const aiTip = calcAITip(goal);
-  const isComplete = goal.status === 'completed';
+  const isComplete = goal.status === 'completed' || goal.status === 'purchased';
+  const isPurchased = goal.status === 'purchased';
   const paymentsLeft = Math.max(0, goal.timeline - goal.monthsCompleted);
   const emotionalLine = getEmotionalProgress(progress, goal.productName, paymentsLeft);
   const futureDate = getFutureDate(goal.endDate);
@@ -78,9 +79,11 @@ export default function GoalDetail() {
     }
   };
 
+
+
   return (
     <div className="page page-content">
-      <ConfettiEffect trigger={isComplete} />
+      <ConfettiEffect trigger={goal.status === 'completed' && !isPurchased} />
 
       {/* Header */}
       <div className="detail-header animate-fade-in">
@@ -88,7 +91,7 @@ export default function GoalDetail() {
           ← Dashboard
         </button>
         <div className="detail-actions">
-          {goal.status !== 'completed' && (
+          {!isComplete && (
             <>
               <button type="button" className="btn btn-secondary btn-sm" onClick={() => pauseGoal(goal.id)} id="pause-goal">
                 {goal.status === 'paused' ? '▶ Resume' : '⏸ Pause'}
@@ -114,8 +117,8 @@ export default function GoalDetail() {
             <div className="detail-product-name">{goal.productName}</div>
             <div className="detail-badges">
               {goal.priceLocked && <span className="badge badge-accent">🔐 Locked at {formatCurrency(goal.lockedPrice)}</span>}
-              <span className={`badge ${isComplete ? 'badge-success' : goal.status === 'paused' ? 'badge-warning' : 'badge-accent'}`}>
-                {isComplete ? '✅ Complete!' : goal.status === 'paused' ? '⏸ Paused' : '🟢 Active'}
+              <span className={`badge ${isPurchased ? 'badge-accent' : isComplete ? 'badge-success' : goal.status === 'paused' ? 'badge-warning' : 'badge-accent'}`}>
+                {isPurchased ? '🛍️ Purchased!' : isComplete ? '✅ Complete!' : goal.status === 'paused' ? '⏸ Paused' : '🟢 Active'}
               </span>
             </div>
           </div>
@@ -135,7 +138,7 @@ export default function GoalDetail() {
           </div>
           <div className="detail-stat-divider" />
           <div className="detail-stat">
-            <div className="detail-stat-val">{formatCurrency(goal.targetPrice - goal.savedAmount)}</div>
+            <div className="detail-stat-val">{formatCurrency(Math.max(0, goal.targetPrice - goal.savedAmount))}</div>
             <div className="detail-stat-lbl">Remaining</div>
           </div>
           <div className="detail-stat-divider" />
@@ -230,7 +233,7 @@ export default function GoalDetail() {
                     {done ? '✓' : m.icon}
                   </div>
                   <div className="milestone-info">
-                    <div className="milestone-label">{m.label}</div>
+                     <div className="milestone-label">{m.label}</div>
                     <div className="milestone-reward">{m.reward}</div>
                   </div>
                   <div className="milestone-pct">{m.pct}%</div>
@@ -289,9 +292,9 @@ export default function GoalDetail() {
 
           {/* Completion Card */}
           {isComplete && (
-            <div className="completion-reward-card card card-glow" style={{ marginTop: 16 }}>
-              <div className="completion-top">🎉</div>
-              <h3>Goal Complete!</h3>
+            <div className={`completion-reward-card card ${!isPurchased ? 'card-glow' : ''}`} style={{ marginTop: 16 }}>
+              <div className="completion-top">{isPurchased ? '🛍️' : '🎉'}</div>
+              <h3>{isPurchased ? 'Product Purchased!' : 'Goal Complete!'}</h3>
               <div className="reward-breakdown">
                 <div className="reward-row">
                   <span>Original Price</span>
@@ -306,9 +309,14 @@ export default function GoalDetail() {
                   <span className="gradient-text">{formatCurrency(goal.targetPrice - goal.reward.amount)}</span>
                 </div>
               </div>
-              <button type="button" className="btn btn-primary" style={{ width: '100%' }} id="unlock-purchase" onClick={() => alert('🛍 In a real integration, this redirects to the retailer at your locked price — cheaper than buying today!')}>
-                🛍 Claim Your Reward & Buy →
-              </button>
+              {!isPurchased && (
+                <button type="button" className="btn btn-primary" style={{ width: '100%' }} id="unlock-purchase" onClick={() => {
+                  purchaseGoal(goal.id);
+                  alert('🛍 In a real integration, this redirects to the retailer. Simulated as Purchased!');
+                }}>
+                  🛍 Claim Your Reward & Buy →
+                </button>
+              )}
             </div>
           )}
         </div>

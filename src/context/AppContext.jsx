@@ -68,28 +68,54 @@ export function AppProvider({ children }) {
   const [user, setUser] = useState(null);
   const [goals, setGoals] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loading, setLoading] = useState(true);
+  
+  // 🚀 PERFORMANCE: Synchronous zero-latency session cache check.
+  // If no auth tokens exist, we bypass the loading spinner instantly.
+  const hasLocalSession = typeof window !== 'undefined' && 
+    Object.keys(localStorage).some(k => k.startsWith('sb-') && k.endsWith('-auth-token'));
+  
+  const [loading, setLoading] = useState(hasLocalSession);
   const [toasts, setToasts] = useState([]);
   const supabaseUid = useRef(null);
   const isFetchingData = useRef(null);
-  // ══ Bootstrap: Native Event-Driven Auth ══════════════════════
   useEffect(() => {
     // Rely completely on Supabase's native event emitter to determine state,
     // handling slow cold-boots natively without relying on manual Promise timeouts.
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        
+        // --- TEST MODE BYPASS ---
+        if (localStorage.getItem('demo_test_active') === 'true') {
+           if (!isLoggedIn) {
+             const uid = 'demo-test-uuid-1234';
+             supabaseUid.current = uid;
+             setUser({
+               id: uid, email: 'test@gmail.com', name: 'Test User', avatar: 'TE', streak: 1, consistencyScore: 10,
+               achievements: ACHIEVEMENTS.map(a => ({ ...a, unlocked: false, unlockedAt: null }))
+             });
+             setGoals([]);
+             setIsLoggedIn(true);
+           }
+           setLoading(false);
+           return;
+        }
+        // ------------------------
+
         if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN') {
           if (session?.user) {
-            await loadUserData(session.user);
-            setLoading(false); // <--- MUST drop spinner after data is loaded!
+            try {
+              await loadUserData(session.user);
+            } catch (e) {
+              console.error("Data load failed:", e);
+            } finally {
+               setLoading(false); // GUARANTEED to drop spinner
+            }
           } else {
             // User is legitimately logged out
             setUser(null);
             setGoals([]);
             setIsLoggedIn(false);
             supabaseUid.current = null;
-            setLoading(false); // Drop spinner immediately
+            setLoading(false);
           }
         } 
         else if (event === 'SIGNED_OUT') {
@@ -113,10 +139,21 @@ export function AppProvider({ children }) {
       supabaseUid.current = authUser.id;
       
       try {
-        const [profileRes, goalsRes] = await Promise.all([
+        const dbPromise = Promise.all([
           getProfile(authUser.id),
           getGoals(authUser.id)
         ]);
+
+        const timeoutPromise = new Promise((_, rej) => 
+          setTimeout(() => rej(new Error('Database Fetch Timeout')), 8000)
+        );
+
+        let profileRes, goalsRes;
+        try {
+          [profileRes, goalsRes] = await Promise.race([dbPromise, timeoutPromise]);
+        } catch (dbErr) {
+          console.warn('Database fetch slow or offline. Granting fallback access:', dbErr);
+        }
         
         const profile = profileRes?.data;
         const goalRows = goalsRes?.data;
@@ -135,10 +172,9 @@ export function AppProvider({ children }) {
         
         setUser(appUser);
         setGoals((goalRows || []).map(rowToGoal));
-        setIsLoggedIn(true);
+        setIsLoggedIn(true); // Must ALWAYS run so router doesn't bounce them
       } catch (err) {
-        console.error('loadUserData Failed:', err);
-        // Do not kick the user out, but do unlock the mutex.
+        console.error('Critical User Initialization Failed:', err);
       } finally {
         setTimeout(() => { isFetchingData.current = null; }, 50);
       }
@@ -177,6 +213,24 @@ export function AppProvider({ children }) {
     const email = sanitizeInput(emailRaw);
     if (!validateEmail(email)) return { success: false, error: 'Invalid email format.' };
 
+    // --- TEST MODE BYPASS ---
+    if (email === 'test@gmail.com') {
+      if (!import.meta.env.DEV || passwordRaw !== 'Test1234!') {
+        return { success: false, error: 'Unauthorized test account access.' };
+      }
+      const uid = 'demo-test-uuid-1234';
+      supabaseUid.current = uid;
+      localStorage.setItem('demo_test_active', 'true');
+      setUser({
+        id: uid, email, name: 'Test User', avatar: 'TE', streak: 1, consistencyScore: 10,
+        achievements: ACHIEVEMENTS.map(a => ({ ...a, unlocked: false, unlockedAt: null }))
+      });
+      setGoals([]);
+      setIsLoggedIn(true);
+      return { success: true };
+    }
+    // ------------------------
+
     const { data, error } = await sbSignIn(email, passwordRaw);
     if (error) {
       auditLog('LOGIN_FAILED', { email, reason: error.message });
@@ -202,7 +256,27 @@ export function AppProvider({ children }) {
     if (!validateEmail(email)) return { success: false, error: 'Invalid email format.' };
 
     const pwdResult = validatePassword(passwordRaw);
-    if (!pwdResult.valid) return { success: false, error: pwdResult.errors[0] };
+    if (emailRaw !== 'test@gmail.com') {
+       if (!pwdResult.valid) return { success: false, error: pwdResult.errors[0] };
+    }
+
+    // --- TEST MODE BYPASS ---
+    if (email === 'test@gmail.com') {
+      if (!import.meta.env.DEV || passwordRaw !== 'Test1234!') {
+        return { success: false, error: 'Unauthorized test account access.' };
+      }
+      const uid = 'demo-test-uuid-1234';
+      supabaseUid.current = uid;
+      localStorage.setItem('demo_test_active', 'true');
+      setUser({
+        id: uid, email, name: nameResult?.value || 'Test User', avatar: 'TE', streak: 1, consistencyScore: 10,
+        achievements: ACHIEVEMENTS.map(a => ({ ...a, unlocked: false, unlockedAt: null }))
+      });
+      setGoals([]);
+      setIsLoggedIn(true);
+      return { success: true };
+    }
+    // ------------------------
 
     const { data, error } = await sbSignUp(email, passwordRaw, nameResult.value);
     if (error) {
@@ -229,6 +303,18 @@ export function AppProvider({ children }) {
     const uid = supabaseUid.current;
     auditLog('LOGOUT', { userId: uid });
     stopInactivityTimer();
+    
+    // --- TEST MODE BYPASS ---
+    if (localStorage.getItem('demo_test_active') === 'true') {
+      localStorage.removeItem('demo_test_active');
+      setUser(null);
+      setGoals([]);
+      setIsLoggedIn(false);
+      supabaseUid.current = null;
+      return;
+    }
+    // ------------------------
+
     await sbSignOut();
     // onAuthStateChange handler clears state
   };
@@ -386,17 +472,34 @@ export function AppProvider({ children }) {
   const updateStreak = useCallback(() => {
     setUser(prev => {
       if (!prev) return prev;
+      
+      const uid = supabaseUid.current;
+      if (!uid) return prev;
+
+      // Anti-Farming mechanism: Prevent users from depositing 10 times in a day to spike their streak
+      const todayStr = today().slice(0, 10);
+      const storageKey = `last_streak_${uid}`;
+      const lastStreakDate = localStorage.getItem(storageKey);
+
+      if (lastStreakDate === todayStr) {
+        return prev; // Already claimed today's streak point!
+      }
+
+      // Mark today as claimed
+      localStorage.setItem(storageKey, todayStr);
+
       const newStreak = (prev.streak || 0) + 1;
       const newScore = Math.min(100, (prev.consistencyScore || 0) + 2);
+
       if (newStreak === 7)  { unlockAchievementById('streak_7');  addToast('🔥 7-day streak! Week Warrior!', 'achievement'); }
       if (newStreak === 30) { unlockAchievementById('streak_30'); addToast('⚡ 30-day streak! Month Master!', 'achievement'); }
+
       const updated = { ...prev, streak: newStreak, consistencyScore: newScore };
-      if (supabaseUid.current) {
-        upsertProfile({ id: supabaseUid.current, name: prev.name, email: prev.email, streak: newStreak, consistency_score: newScore });
-      }
+      upsertProfile({ id: uid, name: prev.name, email: prev.email, streak: newStreak, consistency_score: newScore });
+
       return updated;
     });
-  }, [unlockAchievementById]);
+  }, [unlockAchievementById, addToast]);
 
   // ══ COMPUTED ═════════════════════════════════════════════════
   const totalSaved = goals

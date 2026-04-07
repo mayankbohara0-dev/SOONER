@@ -148,11 +148,13 @@ export default function CreateGoal() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     if (!targetPrice || targetPrice < 100) return;
     const product = selected || { id: 'custom', name: customProduct, emoji: '🎯', color: '#00FF94' };
-    const goal = createGoal({ product, targetPrice, timeline });
-    navigate(`/goal/${goal.id}`);
+    const goal = await createGoal({ product, targetPrice, timeline });
+    if (goal && goal.id) {
+      navigate(`/goal/${goal.id}`);
+    }
   };
 
   const goBack = () => {
@@ -192,32 +194,47 @@ export default function CreateGoal() {
             <h3 className="step-title">What do you want to save for?</h3>
 
             {/* Live Pricing Flow */}
-            <div className="live-pricing-box" style={{ background: 'var(--surface-color)', padding: '16px', borderRadius: '14px', border: '1.5px solid var(--border-color)', marginBottom: '24px' }}>
-              <label className="custom-label" style={{ fontSize: '0.85rem', fontWeight: 800 }}>
-                🔗 Paste Amazon/Flipkart Link
-              </label>
-              <p style={{ fontSize: '0.75rem', color: '#888', margin: '4px 0 12px' }}>
-                We'll fetch the live market price and lock it for you.
+            <div className="live-pricing-box" style={{ 
+              background: 'linear-gradient(135deg, rgba(0,119,255,0.05), rgba(0,229,255,0.05))', 
+              padding: '28px', 
+              borderRadius: '24px', 
+              border: '1.5px solid rgba(0,119,255,0.2)', 
+              marginBottom: '32px',
+              boxShadow: '0 16px 32px rgba(0,119,255,0.06)'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+                <span style={{ fontSize: '1.8rem' }}>✨</span>
+                <label className="custom-label" style={{ fontSize: '1.1rem', fontWeight: 900, color: 'var(--text-primary)', margin: 0 }}>
+                  Auto-Fetch Live Price
+                </label>
+              </div>
+              <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', margin: '0 0 20px', lineHeight: 1.6 }}>
+                Paste any <strong>Amazon</strong> or <strong>Flipkart</strong> URL. Our AI engines will instantly extract the live market price and lock it in.
               </p>
-              <div style={{ display: 'flex', gap: 8 }}>
+              <div style={{ display: 'flex', gap: 12 }}>
                 <input 
                   type="url" 
                   className="input" 
-                  placeholder="https://amazon.in/dp/..." 
+                  placeholder="Paste URL here..." 
                   value={liveUrl}
                   onChange={e => setLiveUrl(e.target.value)}
-                  style={{ flex: 1 }}
+                  style={{ flex: 1, padding: '16px 20px', borderRadius: '16px', fontSize: '0.95rem', boxShadow: 'inset 0 2px 6px rgba(0,0,0,0.02)' }}
                 />
                 <button 
                   type="button" 
                   className="btn btn-primary" 
                   onClick={handleFetchLivePrice}
                   disabled={!liveUrl || fetchingLive}
-                  style={{ whiteSpace: 'nowrap', padding: '0 16px' }}
+                  style={{ whiteSpace: 'nowrap', padding: '0 28px', borderRadius: '16px', fontWeight: 800 }}
                 >
-                  {fetchingLive ? 'Analyzing...' : 'Fetch Price'}
+                  {fetchingLive ? 'Analyzing...' : 'Fetch Price →'}
                 </button>
               </div>
+              {fetchingLive && (
+                <div style={{ marginTop: '16px', fontSize: '0.78rem', color: '#0077FF', fontWeight: 'bold', animation: 'pulse-glow 1s infinite' }}>
+                  Bypassing security and scanning product data...
+                </div>
+              )}
             </div>
 
             <div className="divider" style={{ margin: '0 0 24px 0' }}><span>OR SELECT PRESET</span></div>

@@ -61,7 +61,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 100px 32px 80px;
+  padding: 160px 32px 80px;
   position: relative;
   background: var(--gradient-bg);
   overflow: hidden;
@@ -69,11 +69,11 @@
 
 .hero-glow {
   position: absolute;
-  top: 40%;
-  left: 30%;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
-  width: 70vh;
-  height: 70vh;
+  width: 80vh;
+  height: 80vh;
   background: radial-gradient(circle, rgba(0,229,255,0.18) 0%, rgba(10,29,92,0.5) 40%, transparent 70%);
   filter: blur(60px);
   z-index: 0;
@@ -88,18 +88,23 @@
 
 .hero-content {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 80px;
-  max-width: 1100px;
+  text-align: center;
+  gap: 0;
+  max-width: 780px;
   width: 100%;
   z-index: 1;
 }
 
 .hero-text-block {
-  flex: 1;
-  max-width: 560px;
+  width: 100%;
+  max-width: 680px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .hero-pill {
@@ -138,7 +143,8 @@
   color: rgba(255, 255, 255, 0.78);
   line-height: 1.7;
   margin-bottom: 36px;
-  max-width: 480px;
+  max-width: 540px;
+  text-align: center;
 }
 
 .hero-ctas {
@@ -152,7 +158,7 @@
   padding: 18px 36px;
   font-size: 1.05rem;
   font-weight: 800;
-  align-self: flex-start;
+  align-self: center;
 }
 
 .auth-link-text {
@@ -169,6 +175,7 @@
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .hero-trust-row span {
@@ -179,117 +186,270 @@
 }
 
 /* ===== PHONE MOCKUP ===== */
-.hero-mockup-wrapper { flex-shrink: 0; }
+.hero-mockup-wrapper {
+  flex-shrink: 0;
+  position: relative;
+  animation: float-mockup 6s ease-in-out infinite;
+}
+
+@keyframes float-mockup {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
+.mockup-float-1, .mockup-float-2 {
+  position: absolute;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 10px 16px;
+  border-radius: 16px;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 800;
+  z-index: 10;
+  box-shadow: 0 16px 32px rgba(0,0,0,0.4);
+  pointer-events: none;
+}
+
+.mockup-float-1 {
+  top: 15%;
+  right: -60px;
+  animation: float-mockup 5s ease-in-out infinite 1s;
+}
+
+.mockup-float-2 {
+  bottom: 25%;
+  left: -70px;
+  animation: float-mockup 7s ease-in-out infinite 0.5s;
+}
 
 .mockup-frame {
-  width: 240px;
-  height: 490px;
-  background: #000;
-  border-radius: 40px;
-  border: 10px solid #1A1A1A;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.6), inset 0 0 10px rgba(255,255,255,0.08);
+  width: 280px;
+  height: 580px;
   position: relative;
-  transform: perspective(1000px) rotateY(-12deg) rotateX(4deg);
-  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-  overflow: hidden;
+  transform-style: preserve-3d;
+  transform: perspective(1600px) rotateY(-24deg) rotateX(12deg) rotateZ(-3deg);
+  transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  /* Premium Metallic phone chassis */
+  background: linear-gradient(145deg, #2b2e36, #0e1014);
+  border-radius: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 
+    inset 0 4px 6px rgba(255, 255, 255, 0.08), 
+    -20px 40px 60px rgba(0,0,0,0.5), 
+    0 10px 40px inset rgba(0,0,0,0.9), 
+    -4px 0 0 1px #444,
+    0 0 60px rgba(98, 0, 238, 0.3);
+}
+
+.mockup-frame::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 44px;
+  box-shadow: inset 0px 4px 14px rgba(255,255,255,0.15);
+  pointer-events: none;
+  z-index: 20;
 }
 
 .mockup-frame:hover {
-  transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+  transform: perspective(1600px) rotateY(-6deg) rotateX(4deg) scale(1.08);
 }
 
-.mockup-screen {
-  background: #f4f6fb;
-  width: 100%; height: 100%;
-  display: flex; flex-direction: column;
+.mockup-glare {
+  position: absolute;
+  width: 200%; height: 200%;
+  top: -50%; left: -50%;
+  background: linear-gradient(
+    115deg, rgba(255,255,255,0) 0%, 
+    rgba(255,255,255,0) 45%, 
+    rgba(255,255,255,0.06) 50%, 
+    rgba(255,255,255,0) 55%, 
+    rgba(255,255,255,0) 100%
+  );
+  transform: rotate(25deg) translateY(-20%);
+  pointer-events: none;
+  z-index: 30;
+  border-radius: 44px;
   overflow: hidden;
 }
 
-.mockup-header {
-  background: linear-gradient(135deg, #0A1D5C, #0077FF);
-  padding: 20px 16px 24px;
-  color: #fff;
+.neon-pulse-screen {
+  position: absolute;
+  top: 13px; left: 13px; right: 13px; bottom: 13px;
+  background: #f5f6fa;
+  border-radius: 36px;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  z-index: 10;
+  transform: translateZ(2px);
+  box-shadow: inset 0 8px 16px rgba(0,0,0,0.05);
 }
 
-.mockup-greeting { font-size: 0.7rem; opacity: 0.8; margin-bottom: 4px; }
-.mockup-total { font-size: 0.65rem; opacity: 0.65; margin-bottom: 2px; }
-.mockup-balance { font-size: 1.6rem; font-weight: 900; letter-spacing: -0.03em; }
+.mockup-blobs {
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  background: #f5f6fa;
+}
 
-.mockup-goal-card {
-  margin: 14px 12px;
-  background: #fff;
-  border-radius: 16px;
-  padding: 14px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.6;
+  animation: blob-float 10s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.blob-orange {
+  width: 150px; height: 150px;
+  background: linear-gradient(135deg, #ff8ead, #ff4e8c);
+  top: -20px; right: -40px;
+}
+
+.blob-magenta {
+  width: 180px; height: 180px;
+  background: linear-gradient(135deg, #ac8eff, #6200ee);
+  top: 60px; left: -60px;
+  animation-delay: -5s;
+}
+
+@keyframes blob-float {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(40px) scale(1.1); }
+}
+
+.mockup-header-glass {
+  position: relative;
+  z-index: 1;
+  padding: 38px 20px 28px;
+  color: #2c2f32;
+}
+
+.mockup-nav {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 24px;
+}
+
+.mockup-greeting { font-size: 0.9rem; font-weight: 700; color: #595c5f; }
+.mockup-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #6200EE; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 0.8rem;
+  box-shadow: 0 4px 12px rgba(98, 0, 238, 0.3);
+}
+
+.mockup-total { font-size: 0.75rem; font-weight: 700; color: #595c5f; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+.mockup-balance.glow-text { 
+  font-size: 2.2rem; font-weight: 900; letter-spacing: -0.04em; 
+  color: #2c2f32;
+  text-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.mockup-goal-card.glass-card {
+  position: relative;
+  z-index: 1;
+  margin: 0 16px 20px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 28px;
+  padding: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+  border: 1px solid rgba(171, 173, 177, 0.15); /* Ghost Border */
 }
 
 .mockup-goal-top {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
+  display: flex; gap: 14px; align-items: center; margin-bottom: 20px;
 }
 
-.mockup-emoji { font-size: 1.1rem; }
-.mockup-goal-name { font-size: 0.65rem; font-weight: 800; color: #000; }
+.goal-icon-wrapper {
+  width: 48px; height: 48px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #f5f6fa, #e6e8ed);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+  box-shadow: inset 0 2px 4px #fff, 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.goal-details {
+  display: flex; flex-direction: column; gap: 4px;
+}
+
+.mockup-goal-name { font-size: 0.95rem; font-weight: 800; color: #2c2f32; }
+
+.mockup-tag.neon-tag {
+  background: rgba(98, 0, 238, 0.08);
+  color: #6200EE;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 0.65rem;
+  display: inline-block;
+}
+
+.mockup-progress-wrap { margin-bottom: 16px; }
 
 .mockup-progress-track {
-  height: 5px;
-  background: #EEF;
-  border-radius: 4px;
+  height: 8px;
+  background: rgba(0,0,0,0.04);
+  border-radius: 8px;
   overflow: hidden;
   margin-bottom: 8px;
+  position: relative;
 }
 
-.mockup-progress-fill {
+.mockup-progress-fill.pulse-gradient {
   height: 100%;
-  background: linear-gradient(90deg, #0A1D5C, #00E5FF);
-  border-radius: 4px;
-  transition: width 1s ease;
+  background: linear-gradient(90deg, #6200EE, #ac8eff);
+  border-radius: 8px;
+  position: relative;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px rgba(98, 0, 238, 0.4);
 }
 
-.mockup-goal-meta {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.58rem;
-  color: #666;
-  margin-bottom: 8px;
-}
-
-.mockup-tag {
-  background: rgba(0,119,255,0.1);
-  color: #0077FF;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-weight: 700;
+.mockup-percent {
+  font-size: 0.75rem; font-weight: 800; color: #595c5f; text-align: right;
 }
 
 .mockup-motivational {
-  font-size: 0.62rem;
-  font-weight: 700;
-  color: #0A1D5C;
-  background: rgba(0,229,255,0.1);
-  padding: 6px 8px;
-  border-radius: 8px;
+  font-size: 0.7rem; font-weight: 800; color: #6200EE;
+  background: linear-gradient(90deg, rgba(98, 0, 238, 0.08), rgba(98, 0, 238, 0.02));
+  padding: 10px 12px;
+  border-radius: 12px;
 }
 
-.mockup-actions {
-  display: flex;
-  gap: 8px;
-  margin: 0 12px;
+.mockup-actions.spacing-actions {
+  display: flex; gap: 12px; margin: auto 16px 24px; position: relative; z-index: 1;
 }
 
 .mockup-action {
-  flex: 1;
-  background: #fff;
-  border: 1.5px solid #EEE;
-  border-radius: 10px;
-  padding: 10px;
-  text-align: center;
-  font-size: 0.6rem;
-  font-weight: 800;
-  color: #000;
+  flex: 1; text-align: center; font-size: 0.85rem; font-weight: 800; padding: 16px 12px; cursor: pointer; transition: all 0.2s;
 }
+
+.btn-glass {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  color: #2c2f32;
+  border-radius: 20px;
+  border: 1px solid rgba(171, 173, 177, 0.15);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+.btn-primary-pill {
+  background: linear-gradient(135deg, #6200EE, #ac8eff);
+  color: #fff;
+  border-radius: 25px;
+  box-shadow: 0 8px 20px rgba(98, 0, 238, 0.3);
+}
+
+.btn-glass:hover, .btn-primary-pill:hover { transform: scale(0.98); }
 
 /* ===== LIGHT ZONE ===== */
 .landing-light {

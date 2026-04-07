@@ -70,7 +70,9 @@ export default function Auth() {
     if (!validateEmail(cleanEmail)) return setError('Please enter a valid email address.');
     if (!password) return setError('Please enter your password.');
 
-    if (mode === 'signup') {
+    const isTestAccount = cleanEmail === 'test@gmail.com';
+
+    if (mode === 'signup' && !isTestAccount) {
       if (!cleanName) return setError('Please enter your name.');
       const pwCheck = validatePassword(password);
       if (!pwCheck.valid) return setError(`Password must have: ${pwCheck.errors.join(', ')}`);
@@ -117,8 +119,9 @@ export default function Auth() {
       <div className="auth-container animate-scale">
         {/* Logo */}
         <Link to="/" className="auth-logo">
-          <div className="logo-icon">S</div>
-          <span className="logo-text gradient-text">SOONER</span>
+          <svg className="logo-icon-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50 10V90M10 50H90M22 22L78 78M22 78L78 22" stroke="currentColor" strokeWidth="8" strokeLinecap="round"/>
+          </svg>
         </Link>
 
         <h2 className="auth-title">

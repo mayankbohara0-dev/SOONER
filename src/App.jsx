@@ -1,16 +1,19 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, Suspense, lazy } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
 import Navbar from './components/Navbar';
 import ToastContainer from './components/Toast';
-import Landing from './pages/Landing';
-import Auth from './pages/Auth';
-import Dashboard from './pages/Dashboard';
-import CreateGoal from './pages/CreateGoal';
-import GoalDetail from './pages/GoalDetail';
-import Rewards from './pages/Rewards';
-import Profile from './pages/Profile';
-import BankLink from './pages/BankLink';
+
+// 🚀 PERFORMANCE: Code Splitting & Lazy Loading
+// Generates separate JavaScript chunks for each page, massively reducing the initial LCP payload.
+const Landing = lazy(() => import('./pages/Landing'));
+const Auth = lazy(() => import('./pages/Auth'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const CreateGoal = lazy(() => import('./pages/CreateGoal'));
+const GoalDetail = lazy(() => import('./pages/GoalDetail'));
+const Rewards = lazy(() => import('./pages/Rewards'));
+const Profile = lazy(() => import('./pages/Profile'));
+const BankLink = lazy(() => import('./pages/BankLink'));
 
 import React, { Component } from 'react';
 
@@ -35,7 +38,7 @@ class ErrorBoundary extends Component {
 
 function ProtectedRoute({ children }) {
   const { isLoggedIn, loading } = useApp();
-  if (loading) return null;
+  if (loading) return <SessionLoader />;
   return isLoggedIn ? children : <Navigate to="/" replace />;
 }
 
@@ -84,16 +87,18 @@ function PageTransitionWrapper({ children }) {
 }
 
 function AppRoutes() {
-  const { isLoggedIn } = useApp();
+  const { isLoggedIn, loading } = useApp();
 
   return (
     <>
       <Navbar />
       <ToastContainer />
-      <SessionLoader>
-        <PageTransitionWrapper>
+      <PageTransitionWrapper>
+        <Suspense fallback={<div className="page-loader"><span className="spinner" /></div>}>
           <Routes>
-            <Route path="/"          element={isLoggedIn ? <Navigate to="/dashboard" replace /> : <Landing />} />
+            <Route path="/" element={
+              loading ? <SessionLoader /> : (isLoggedIn ? <Navigate to="/dashboard" replace /> : <Landing />)
+            } />
             <Route path="/auth"      element={<Auth />} />
             <Route path="/link-bank" element={<ProtectedRoute><BankLink /></ProtectedRoute>} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
@@ -103,8 +108,8 @@ function AppRoutes() {
             <Route path="/profile"   element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="*"          element={<Navigate to="/" replace />} />
           </Routes>
-        </PageTransitionWrapper>
-      </SessionLoader>
+        </Suspense>
+      </PageTransitionWrapper>
     </>
   );
 }

@@ -85,7 +85,7 @@ export default function Landing() {
       <nav className={`landing-sticky-nav ${scrolled ? 'nav-scrolled' : ''}`}>
         <div className="nav-brand">
           <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M50 10V90M10 50H90M22 22L78 78M22 78L78 22" stroke="currentColor" strokeWidth="8" strokeLinecap="round"/>
+            <path d="M50 10V90M10 50H90M22 22L78 78M22 78L78 22" stroke="currentColor" strokeWidth="8" strokeLinecap="round" />
           </svg>
           <span>SOONER</span>
         </div>
@@ -121,37 +121,6 @@ export default function Landing() {
               <span>🔐 Bank-grade security</span>
               <span>💸 Withdraw anytime</span>
               <span>✅ No hidden fees</span>
-            </div>
-          </div>
-
-          {/* Phone mockup */}
-          <div className="hero-mockup-wrapper hidden-mobile">
-            <div className="mockup-frame">
-              <div className="mockup-screen">
-                <div className="mockup-header">
-                  <div className="mockup-greeting">Hey Arjun 👋</div>
-                  <div className="mockup-total">Total Saved</div>
-                  <div className="mockup-balance">₹42,600</div>
-                </div>
-                <div className="mockup-goal-card">
-                  <div className="mockup-goal-top">
-                    <span className="mockup-emoji">📱</span>
-                    <span className="mockup-goal-name">iPhone 16 Pro Max</span>
-                  </div>
-                  <div className="mockup-progress-track">
-                    <div className="mockup-progress-fill" style={{ width: '72%' }} />
-                  </div>
-                  <div className="mockup-goal-meta">
-                    <span>72% complete</span>
-                    <span className="mockup-tag">🔐 Locked ₹1,34,900</span>
-                  </div>
-                  <div className="mockup-motivational">3 payments away from owning this 🔥</div>
-                </div>
-                <div className="mockup-actions">
-                  <div className="mockup-action">＋ Add</div>
-                  <div className="mockup-action">🎁 Rewards</div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -274,15 +243,15 @@ export default function Landing() {
           <div className="timeline-grid">
             <div className="timeline-step">
               <div className="step-number">1</div>
-              <div className="step-icon">🎯</div>
-              <h3 className="feature-title">Pick Your Goal</h3>
-              <p className="feature-desc">Choose any product. The price gets locked the moment you start — even if it goes up tomorrow.</p>
-            </div>
-            <div className="timeline-step">
-              <div className="step-number">2</div>
               <div className="step-icon">💰</div>
               <h3 className="feature-title">Save Monthly</h3>
               <p className="feature-desc">We suggest the ideal amount. Pause anytime. Pay more to finish faster. Your money, your pace.</p>
+            </div>
+            <div className="timeline-step">
+              <div className="step-number">2</div>
+              <div className="step-icon">🎯</div>
+              <h3 className="feature-title">Pick Your Goal</h3>
+              <p className="feature-desc">Choose any product. The price gets locked the moment you start — even if it goes up tomorrow.</p>
             </div>
             <div className="timeline-step">
               <div className="step-number">3</div>

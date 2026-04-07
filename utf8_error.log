@@ -1,0 +1,154 @@
+﻿node.exe : [2m9:49:04 
+am[22m 
+[33m[1m[vite][22m[39m 
+[33mwarning: `esbuild` 
+option was specified by 
+"vite:react-babel" 
+plugin. This option is 
+deprecated, please use 
+`oxc` instead.[39m
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo        
+      : NotSpecified: (  
+  [2m9:49:04 am...` in   
+ stead.[39m:String) [    
+], RemoteException
+    + FullyQualifiedError 
+   Id : NativeCommandErr  
+  or
+ 
+[2m9:49:04 am[22m 
+[33m[1m[vite][22m[39m 
+[33mwarning: `optimizeDep
+s.esbuildOptions` option 
+was specified by 
+"vite:react-babel" 
+plugin. This option is 
+deprecated, please use `op
+timizeDeps.rolldownOptions
+` instead.[39m
+[33mBoth esbuild and oxc 
+options were set. oxc 
+options will be used and 
+esbuild options will be 
+ignored.[39m The 
+following esbuild options 
+were set: `{ jsx: 
+'automatic', 
+jsxImportSource: 
+undefined }`
+[31mΓÄ»ΓÄ»ΓÄ»ΓÄ»[39m[1m
+[41m Unhandled Errors [4
+9m[22m[31mΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ
+»[39m
+[31m[1m
+Vitest caught 1 unhandled 
+error during the test run.
+This might cause false 
+positive tests. Resolve 
+unhandled errors to make 
+sure your tests are not 
+affected.[22m[39m
+
+[31mΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[39m
+[1m[41m Unhandled Error 
+[49m[22m[31mΓÄ»ΓÄ»ΓÄ»ΓÄ»
+ΓÄ»[39m
+[31m[1mError[22m: 
+[vitest-pool]: Failed to 
+start forks worker for 
+test files C:/Users/Mayank
+-Pc/Downloads/Sooner/src/u
+tils/security.test.js.[39
+m
+[90m [2mΓ¥»[22m ../../A
+ppData/Local/npm-cache/_np
+x/69c381f8ad94b576/node_mo
+dules/vitest/dist/chunks/c
+li-api.Bxr1Nn49.js:[2m345
+0:94[22m[39m
+[90m [2mΓ¥»[22m 
+processTicksAndRejections 
+node:internal/process/task
+_queues:[2m103:5[22m[39
+m
+[90m [2mΓ¥»[22m 
+Pool.schedule ../../AppDat
+a/Local/npm-cache/_npx/69c
+381f8ad94b576/node_modules
+/vitest/dist/chunks/cli-ap
+i.Bxr1Nn49.js:[2m3450:5[
+22m[39m
+
+[31m[1mCaused by: 
+Error[22m: Cannot find 
+package 'jsdom' imported 
+from C:\Users\Mayank-Pc\Ap
+pData\Local\npm-cache\_npx
+\69c381f8ad94b576\node_mod
+ules\vitest\dist\chunks\in
+dex.DC7d2Pf8.js[39m
+[90m [2mΓ¥»[22m 
+Object.getPackageJSONURL n
+ode:internal/modules/packa
+ge_json_reader:[2m316:9[
+22m[39m
+[90m [2mΓ¥»[22m 
+packageResolve node:intern
+al/modules/esm/resolve:[2
+m768:81[22m[39m
+[90m [2mΓ¥»[22m 
+moduleResolve node:interna
+l/modules/esm/resolve:[2m
+858:18[22m[39m
+[90m [2mΓ¥»[22m 
+defaultResolve node:intern
+al/modules/esm/resolve:[2
+m990:11[22m[39m
+[90m [2mΓ¥»[22m 
+#cachedDefaultResolve node
+:internal/modules/esm/load
+er:[2m737:20[22m[39m
+[90m [2mΓ¥»[22m 
+ModuleLoader.resolve node:
+internal/modules/esm/loade
+r:[2m714:38[22m[39m
+[90m [2mΓ¥»[22m ModuleL
+oader.getModuleJobForImpor
+t node:internal/modules/es
+m/loader:[2m293:38[22m[
+39m
+[90m [2mΓ¥»[22m onImpor
+t.tracePromise.__proto__ n
+ode:internal/modules/esm/l
+oader:[2m665:36[22m[39m
+[90m [2mΓ¥»[22m Tracing
+Channel.tracePromise node:
+diagnostics_channel:[2m35
+0:14[22m[39m
+[90m [2mΓ¥»[22m 
+ModuleLoader.import node:i
+nternal/modules/esm/loader
+:[2m664:21[22m[39m
+
+[31m[2mΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ
+»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»Γ
+Ä»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»[22m[39m
+[31m[1mSerialized 
+Error:[22m[39m [90m{ 
+code: 
+'ERR_MODULE_NOT_FOUND' 
+}[39m
+[31mΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ
+»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»Γ
+Ä»ΓÄ»ΓÄ»[39m
+

@@ -52,8 +52,22 @@
   align-items: center;
   gap: 10px;
   text-decoration: none;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
   justify-content: center;
+}
+
+.logo-icon-svg {
+  width: 32px;
+  height: 32px;
+  color: var(--accent-start);
+  flex-shrink: 0;
+}
+
+.logo-text {
+  font-size: 1.6rem;
+  font-weight: 900;
+  font-family: var(--font-display);
+  letter-spacing: -0.04em;
 }
 
 .auth-title {

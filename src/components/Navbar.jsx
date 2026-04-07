@@ -73,21 +73,8 @@ export default function Navbar() {
   const navigate = useNavigate();
   const [visible, setVisible] = useState(true);
   const [fabPressed, setFabPressed] = useState(false);
-  const lastScrollY = useRef(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const curr = window.scrollY;
-      if (curr > lastScrollY.current + 8 && curr > 80) {
-        setVisible(false);
-      } else if (curr < lastScrollY.current - 4) {
-        setVisible(true);
-      }
-      lastScrollY.current = curr;
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  
+  // Auto-hiding logic has been disabled so the navbar remains permanently visible on mobile.
 
   // Hide on landing, auth, and link-bank pages + when not logged in
   const hiddenPaths = ['/', '/auth', '/link-bank'];
